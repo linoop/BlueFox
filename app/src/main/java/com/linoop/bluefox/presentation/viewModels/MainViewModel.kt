@@ -5,13 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linoop.bluefox.business.*
+import com.linoop.bluefox.presentation.UserListCardViewModel
+import com.linoop.bluefox.presentation.UserListViewState
+import com.linoop.bluefox.utils.DatabaseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val createUserUseCase: CreateUserUseCase,
+    private val getUsersUseCase: GetUsersUseCase,
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateAddress: ValidateAddressUseCase,
@@ -22,13 +26,31 @@ class MainViewModel @Inject constructor(
     private val _userDataValidation = MutableLiveData<UserRegFormState>()
     val userDataValidation: LiveData<UserRegFormState> get() = _userDataValidation
 
+
+    private val _usersListViewSate = MutableLiveData<UserListViewState>()
+    val usersListViewSate: LiveData<UserListViewState> get() = _usersListViewSate
+
+    fun getUsersList() = viewModelScope.launch {
+        _usersListViewSate.postValue(UserListViewState.Loading)
+        when(val result = getUsersUseCase.invoke()){
+            is DatabaseResult.Error -> _usersListViewSate.postValue(UserListViewState.Error)
+            is DatabaseResult.Success -> _usersListViewSate.postValue(UserListViewState.Content(
+                    result.data.map { UserListCardViewModel(it.userId,it.name, it.email, it.address) }
+                )
+            )
+        }
+    }
+
     fun createUser(userRegFormState: UserRegFormState) {
         val nameResult = validateNameUseCase.execute(userRegFormState.name)
         val emailResult = validateEmailUseCase.execute(userRegFormState.email)
         val addressResult = validateAddress.execute(userRegFormState.address)
         val passwordResult = validatePasswordUseCase.execute(userRegFormState.password)
         val confirmPswResult =
-            validateConfirmPswUseCase.execute(userRegFormState.password, userRegFormState.confirmPassword)
+            validateConfirmPswUseCase.execute(
+                userRegFormState.password,
+                userRegFormState.confirmPassword
+            )
         val hasError = listOf(
             nameResult,
             emailResult,
@@ -36,7 +58,7 @@ class MainViewModel @Inject constructor(
             passwordResult,
             confirmPswResult
         ).any { !it.successful }
-        if(hasError){
+        if (hasError) {
             userRegFormState.nameError = nameResult.errorMessage
             userRegFormState.emailError = emailResult.errorMessage
             userRegFormState.addressError = addressResult.errorMessage
@@ -45,7 +67,14 @@ class MainViewModel @Inject constructor(
         }
         _userDataValidation.value = userRegFormState
         viewModelScope.launch {
-            //userRepository.createUser()
+            val user = UserModel(
+                0,
+                userRegFormState.name,
+                userRegFormState.email,
+                userRegFormState.address,
+                userRegFormState.password
+            )
+            createUserUseCase.invoke(user)
         }
     }
 }
