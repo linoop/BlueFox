@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.linoop.bluefox.R
 import com.linoop.bluefox.databinding.FragementLoginBinding
 
-class LoginFragment:Fragment(R.layout.fragement_login) {
+class LoginFragment : Fragment(R.layout.fragement_login) {
     private lateinit var binding: FragementLoginBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -16,6 +16,9 @@ class LoginFragment:Fragment(R.layout.fragement_login) {
     }
 
     private fun setupFragment() {
+        binding.login.setOnClickListener {
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToUserListFragment())
+        }
         binding.gotoCreateUser.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToCreateUserFragment())
         }

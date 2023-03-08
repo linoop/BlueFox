@@ -1,4 +1,4 @@
-package com.example.mycicdapp.data.repository.database
+package com.linoop.bluefox.database
 
 import android.content.Context
 import androidx.room.Room
@@ -8,6 +8,7 @@ import com.linoop.bluefox.data.UserEntity
 import com.google.common.truth.Truth.assertThat
 import com.linoop.bluefox.data.repository.database.UserDao
 import com.linoop.bluefox.data.repository.database.UserDatabase
+import kotlinx.coroutines.runBlocking
 
 import org.junit.After
 import org.junit.Before
@@ -36,17 +37,17 @@ class UserDatabaseTest {
     }
 
     @Test
-    fun createUser(){
-        val userEntity = UserEntity("Linoop", "linoop@gmail.com", "Kochi")
+    fun createUser() = runBlocking{
+        val userEntity = UserEntity("Linoop", "linoop@gmail.com", "Kochi","1234")
         userDao.createUser(userEntity)
         val users = userDao.getUsers()
         assertThat(users).contains(userEntity)
     }
 
     @Test
-    fun getUserById(){
-        val user1 = UserEntity("Linoop", "linoop@gmail.com", "Kochi")
-        val user2 = UserEntity("abc", "abc@gmail.com", "xyz")
+    fun getUserById() = runBlocking{
+        val user1 = UserEntity("Linoop", "linoop@gmail.com", "Kochi", "1234")
+        val user2 = UserEntity("abc", "abc@gmail.com", "xyz", "1234")
         val userId1 = userDao.createUser(user1)
         val userId2 = userDao.createUser(user2)
         val user = userDao.getUserById(userId1.toInt())
