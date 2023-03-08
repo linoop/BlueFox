@@ -1,4 +1,4 @@
-package com.example.mycicdapp.data.repository.database
+package com.linoop.bluefox.database
 
 import android.content.Context
 import androidx.room.Room
