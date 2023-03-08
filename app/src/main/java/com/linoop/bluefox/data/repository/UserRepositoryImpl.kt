@@ -11,19 +11,20 @@ class UserRepositoryImpl @Inject constructor(private val userDao: UserDao): User
         val userEntity = UserEntity(
             userModel.name,
             userModel.email,
-            userModel.address
+            userModel.address,
+            userModel.password
         )
         userDao.createUser(userEntity)
     }
 
     override suspend fun getUserById(userId: Int): UserModel {
        val user = userDao.getUserById(userId)
-        return UserModel(user.userId!!, user.name, user.email, user.address)
+        return UserModel(user.userId!!, user.name, user.email, user.address, user.password)
     }
 
     override suspend fun getUsers(): List<UserModel> {
         return userDao.getUsers().map {
-            UserModel(it.userId!!, it.name, it.email, it.address)
+            UserModel(it.userId!!, it.name, it.email, it.address, it.password)
         }
     }
 }
