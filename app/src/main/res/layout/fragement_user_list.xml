@@ -75,17 +75,35 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/itemList"
+                android:id="@+id/userList"
                 tools:itemCount="3"
                 tools:listitem="@layout/card_view_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium" />
 
-            <View
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/box_size_xl"
-                android:background="@android:color/transparent" />
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/box_size_tiny"
+                    android:background="@android:color/transparent" />
+                <ProgressBar
+                    android:id="@+id/loadingView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/colorMetallicYellow" />
+
+                <TextView
+                    android:id="@+id/errorView"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_items" />
+            </FrameLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

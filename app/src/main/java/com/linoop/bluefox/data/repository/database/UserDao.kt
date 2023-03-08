@@ -10,11 +10,11 @@ import com.linoop.bluefox.utils.Constants.USER_TABLE
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun createUser(userModel: UserEntity):Long
+    suspend fun createUser(userModel: UserEntity):Long
 
     @Query("SELECT * FROM $USER_TABLE WHERE user_id == :userId")
-    fun getUserById(userId:Int): UserEntity
+    suspend fun getUserById(userId:Int): UserEntity
 
     @Query("SELECT * FROM $USER_TABLE")
-    fun getUsers():List<UserEntity>
+    suspend fun getUsers():List<UserEntity>
 }
