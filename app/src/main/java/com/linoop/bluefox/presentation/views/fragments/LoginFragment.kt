@@ -16,11 +16,13 @@ class LoginFragment : Fragment(R.layout.fragement_login) {
     }
 
     private fun setupFragment() {
-        binding.login.setOnClickListener {
-            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToUserListFragment())
-        }
+        binding.login.setOnClickListener { userLogin() }
         binding.gotoCreateUser.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToCreateUserFragment())
         }
+    }
+
+    private fun userLogin() {
+        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToUserListFragment())
     }
 }
