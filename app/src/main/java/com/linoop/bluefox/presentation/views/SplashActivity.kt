@@ -14,10 +14,16 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.myButton.setOnClickListener { buttonOnClick() }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         startActivity(Intent(this, MainActivity::class.java))
     }
 
     private fun buttonOnClick() {
-        binding.myTextView.text = "Clicked"
+        //binding.myTextView.text = "Clicked"
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

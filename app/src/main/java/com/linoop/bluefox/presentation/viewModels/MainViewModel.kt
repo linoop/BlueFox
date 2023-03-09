@@ -8,6 +8,7 @@ import com.linoop.bluefox.business.*
 import com.linoop.bluefox.presentation.UserListCardViewModel
 import com.linoop.bluefox.presentation.UserListViewState
 import com.linoop.bluefox.utils.DatabaseResult
+import com.linoop.bluefox.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class MainViewModel @Inject constructor(
 
     private val _usersListViewSate = MutableLiveData<UserListViewState>()
     val usersListViewSate: LiveData<UserListViewState> get() = _usersListViewSate
+
+     val createUserResult = SingleLiveEvent<DatabaseResult<Long>>()
+
 
     fun getUsersList() = viewModelScope.launch {
         _usersListViewSate.postValue(UserListViewState.Loading)
@@ -74,7 +78,7 @@ class MainViewModel @Inject constructor(
                 userRegFormState.address,
                 userRegFormState.password
             )
-            createUserUseCase.invoke(user)
+            createUserResult.postValue(createUserUseCase.invoke(user))
         }
     }
 }
