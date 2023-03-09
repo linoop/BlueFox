@@ -7,14 +7,14 @@ import com.linoop.bluefox.data.repository.database.UserDao
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val userDao: UserDao): UserRepository {
-    override suspend fun createUser(userModel: UserModel) {
+    override suspend fun createUser(userModel: UserModel): Long {
         val userEntity = UserEntity(
             userModel.name,
             userModel.email,
             userModel.address,
             userModel.password
         )
-        userDao.createUser(userEntity)
+        return userDao.createUser(userEntity)
     }
 
     override suspend fun getUserById(userId: Int): UserModel {

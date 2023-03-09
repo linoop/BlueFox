@@ -9,6 +9,7 @@ import com.linoop.bluefox.databinding.FragementCreateUserBinding
 import com.linoop.bluefox.presentation.viewModels.MainViewModel
 import com.linoop.bluefox.presentation.viewModels.UserRegFormState
 import com.linoop.bluefox.presentation.views.MainActivity
+import com.linoop.bluefox.utils.DatabaseResult
 
 class CreateUserFragment : Fragment(R.layout.fragement_create_user) {
     private lateinit var binding: FragementCreateUserBinding
@@ -23,6 +24,7 @@ class CreateUserFragment : Fragment(R.layout.fragement_create_user) {
     }
 
     private fun setupFragment() {
+        viewModel.createUserResult.observeEvent(viewLifecycleOwner) { updateUI(it) }
         binding.save.setOnClickListener { saveUser() }
         binding.cancel.setOnClickListener { context.goBack() }
         viewModel.userDataValidation.observe(viewLifecycleOwner) {
@@ -33,6 +35,23 @@ class CreateUserFragment : Fragment(R.layout.fragement_create_user) {
             binding.confirmPassword.error = it.confirmPasswordError
         }
     }
+
+    private fun updateUI(result: DatabaseResult<Long>?) = result?.let {
+        when (it) {
+            is DatabaseResult.Success -> {
+                binding.email.editText?.setText("")
+                binding.name.editText?.setText("")
+                binding.address.editText?.setText("")
+                binding.password.editText?.setText("")
+                binding.confirmPassword.editText?.setText("")
+                context.showMessage("Success", "User created successfully, ID${it.data}")
+            }
+            is DatabaseResult.Error -> {
+                context.showMessage("Error", it.exception.message.toString())
+            }
+        }
+    }
+
 
     private fun saveUser() {
         val email = binding.email.editText?.text.toString().trim()
