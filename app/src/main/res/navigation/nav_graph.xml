@@ -26,5 +26,19 @@
         <action
             android:id="@+id/action_userListFragment_to_createUserFragment"
             app:destination="@id/createUserFragment" />
+        <action
+            android:id="@+id/action_userListFragment_to_userDetailsFragment"
+            app:destination="@id/userDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailsFragment"
+        android:name="com.linoop.bluefox.presentation.views.fragments.UserDetailsFragment"
+        android:label="UserDetailsFragment" >
+        <argument
+            android:name="userId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_userDetailsFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
     </fragment>
 </navigation>

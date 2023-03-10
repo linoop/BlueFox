@@ -15,4 +15,5 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="no_items">No items</string>
     <string name="ok">OK</string>
+    <string name="profile">Profile</string>
 </resources>

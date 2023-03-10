@@ -10,7 +10,7 @@ import com.linoop.bluefox.presentation.UserListCardViewModel
 
 class UserListAdapter(
     val onItemClicked: (UserListCardViewModel) -> Unit,
-) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
 
     private var data: List<UserListCardViewModel> = emptyList()
@@ -18,13 +18,13 @@ class UserListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
-        return ViewHolder(
+    ): UserListViewHolder {
+        return UserListViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.card_view_user, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         holder.bind(data[position])
     }
 
@@ -37,10 +37,13 @@ class UserListAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class UserListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(userListCardViewModel: UserListCardViewModel) {
             val bind = CardViewUserBinding.bind(itemView)
             itemView.setOnClickListener {
+                onItemClicked(userListCardViewModel)
+            }
+            bind.layout.setOnClickListener {
                 onItemClicked(userListCardViewModel)
             }
             bind.apply {

@@ -5,13 +5,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.linoop.bluefox.R
-import com.linoop.bluefox.databinding.FragementLoginBinding
+import com.linoop.bluefox.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment(R.layout.fragement_login) {
-    private lateinit var binding: FragementLoginBinding
+class LoginFragment : Fragment(R.layout.fragment_login) {
+    private lateinit var binding: FragmentLoginBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragementLoginBinding.bind(view)
+        binding = FragmentLoginBinding.bind(view)
         setupFragment()
     }
 

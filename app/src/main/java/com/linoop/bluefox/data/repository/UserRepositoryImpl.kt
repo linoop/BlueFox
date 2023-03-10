@@ -17,14 +17,14 @@ class UserRepositoryImpl @Inject constructor(private val userDao: UserDao): User
         return userDao.createUser(userEntity)
     }
 
-    override suspend fun getUserById(userId: Int): UserModel {
+    override suspend fun getUserById(userId: Long): UserModel {
        val user = userDao.getUserById(userId)
-        return UserModel(user.userId!!, user.name, user.email, user.address, user.password)
+        return UserModel(user.userId!!.toLong(), user.name, user.email, user.address, user.password)
     }
 
     override suspend fun getUsers(): List<UserModel> {
         return userDao.getUsers().map {
-            UserModel(it.userId!!, it.name, it.email, it.address, it.password)
+            UserModel(it.userId!!.toLong(), it.name, it.email, it.address, it.password)
         }
 
         /*try {

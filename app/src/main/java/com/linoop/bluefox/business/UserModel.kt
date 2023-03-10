@@ -1,7 +1,7 @@
 package com.linoop.bluefox.business
 
 data class UserModel(
-    val userId: Int,
+    val userId: Long,
     val name: String,
     val email: String,
     val address: String,

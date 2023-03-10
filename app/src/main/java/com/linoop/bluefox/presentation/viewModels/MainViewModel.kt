@@ -17,6 +17,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val createUserUseCase: CreateUserUseCase,
     private val getUsersUseCase: GetUsersUseCase,
+    private val getUserByIdUseCase: GetUserByIdUseCase,
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateAddress: ValidateAddressUseCase,
@@ -27,20 +28,32 @@ class MainViewModel @Inject constructor(
     private val _userDataValidation = MutableLiveData<UserRegFormState>()
     val userDataValidation: LiveData<UserRegFormState> get() = _userDataValidation
 
+    private val _userDetails = MutableLiveData<DatabaseResult<UserModel>>()
+    val userDetails: LiveData<DatabaseResult<UserModel>> get() = _userDetails
 
     private val _usersListViewSate = MutableLiveData<UserListViewState>()
     val usersListViewSate: LiveData<UserListViewState> get() = _usersListViewSate
 
-     val createUserResult = SingleLiveEvent<DatabaseResult<Long>>()
+    val createUserResult = SingleLiveEvent<DatabaseResult<Long>>()
 
+    fun getUserByID(userID: Long) = viewModelScope.launch {
+        _userDetails.postValue(getUserByIdUseCase.execute(userID))
+    }
 
     fun getUsersList() = viewModelScope.launch {
         _usersListViewSate.postValue(UserListViewState.Loading)
-        when(val result = getUsersUseCase.invoke()){
+        when (val result = getUsersUseCase.invoke()) {
             is DatabaseResult.Error -> _usersListViewSate.postValue(UserListViewState.Error)
             is DatabaseResult.Success -> _usersListViewSate.postValue(UserListViewState.Content(
-                    result.data.map { UserListCardViewModel(it.userId,it.name, it.email, it.address) }
-                )
+                result.data.map {
+                    UserListCardViewModel(
+                        it.userId,
+                        it.name,
+                        it.email,
+                        it.address
+                    )
+                }
+            )
             )
         }
     }
@@ -68,17 +81,19 @@ class MainViewModel @Inject constructor(
             userRegFormState.addressError = addressResult.errorMessage
             userRegFormState.passwordError = passwordResult.errorMessage
             userRegFormState.confirmPasswordError = confirmPswResult.errorMessage
+        } else {
+            viewModelScope.launch {
+                val user = UserModel(
+                    0,
+                    userRegFormState.name,
+                    userRegFormState.email,
+                    userRegFormState.address,
+                    userRegFormState.password
+                )
+                createUserResult.postValue(createUserUseCase.invoke(user))
+            }
         }
         _userDataValidation.value = userRegFormState
-        viewModelScope.launch {
-            val user = UserModel(
-                0,
-                userRegFormState.name,
-                userRegFormState.email,
-                userRegFormState.address,
-                userRegFormState.password
-            )
-            createUserResult.postValue(createUserUseCase.invoke(user))
-        }
+
     }
 }

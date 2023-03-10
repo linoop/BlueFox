@@ -4,20 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.linoop.bluefox.R
-import com.linoop.bluefox.business.UserModel
-import com.linoop.bluefox.databinding.FragementCreateUserBinding
+import com.linoop.bluefox.databinding.FragmentCreateUserBinding
 import com.linoop.bluefox.presentation.viewModels.MainViewModel
 import com.linoop.bluefox.presentation.viewModels.UserRegFormState
 import com.linoop.bluefox.presentation.views.MainActivity
 import com.linoop.bluefox.utils.DatabaseResult
 
-class CreateUserFragment : Fragment(R.layout.fragement_create_user) {
-    private lateinit var binding: FragementCreateUserBinding
+class CreateUserFragment : Fragment(R.layout.fragment_create_user) {
+    private lateinit var binding: FragmentCreateUserBinding
     private lateinit var context: MainActivity
     private lateinit var viewModel: MainViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragementCreateUserBinding.bind(view)
+        binding = FragmentCreateUserBinding.bind(view)
         context = (activity as MainActivity)
         viewModel = context.viewModel
         setupFragment()

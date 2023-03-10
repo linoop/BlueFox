@@ -50,7 +50,7 @@ class UserDatabaseTest {
         val user2 = UserEntity("abc", "abc@gmail.com", "xyz", "1234")
         val userId1 = userDao.createUser(user1)
         val userId2 = userDao.createUser(user2)
-        val user = userDao.getUserById(userId1.toInt())
+        val user = userDao.getUserById(userId1)
         assertThat(user.name).isEqualTo("Linoop")
     }
 
